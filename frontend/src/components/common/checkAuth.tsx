@@ -9,9 +9,11 @@ interface CheckAuthProps{
     children : React.ReactNode
 }
 
-export default function CheckAuth({isAuthenticated , user , children  } :CheckAuthProps){
+export default function CheckAuth({isAuthenticated , user , children  } : CheckAuthProps){
 
     const location = useLocation()
+    isAuthenticated = false
+
 
     if(!isAuthenticated && !(location.pathname.includes("/login") || location.pathname.includes("/register")) ){
         return <Navigate to="/auth/login"/>
