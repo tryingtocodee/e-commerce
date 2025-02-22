@@ -20,7 +20,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const connect = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect("mongodb+srv://mohdmubeen5042:MubeeN11@cluster0.k4ogs.mongodb.net/");
-        console.log("connect to mongodb", connect.name);
+        console.log("connect to mongodb");
     }
     catch (e) {
         console.log(e.message);
