@@ -4,7 +4,7 @@ import CommonForm from "@/components/common/form"
 import { loginFormControl } from "@/config"
 
 const initialState = {
-    username: '',
+    userName: '',
     email: '',
     password: '',
 

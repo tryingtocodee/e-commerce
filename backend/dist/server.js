@@ -14,8 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const dotenv_1 = __importDefault(require("dotenv"));
+const auth_routes_1 = __importDefault(require("./routes/auth/auth-routes"));
+//file imports 
+const config_1 = require("./config/config");
 //db connect 
 const connect = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -28,20 +31,19 @@ const connect = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 connect();
 const app = (0, express_1.default)();
-dotenv_1.default.config();
-const PORT = process.env.PORT;
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
-// app.use(cors({
-//     origin: "http://localhost:5000",
-//     methods: ["GET", "POST", "DELETE", "PUT"],
-//     credentials: true,
-//     allowedHeaders: [
-//         "Content-Type",
-//         "Authorization",
-//         "Expires",
-//         "Cache-Control",
-//         "Pragma"
-//     ]
-// }))
-app.listen(PORT, () => console.log(`server is runing on port ${PORT}`));
+app.use((0, cors_1.default)({
+    origin: "http://localhost:5000",
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    credentials: true,
+    allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "Expires",
+        "Cache-Control",
+        "Pragma"
+    ]
+}));
+app.use("/api/auth", auth_routes_1.default);
+app.listen(config_1.PORT, () => console.log(`server is runing on port ${config_1.PORT}`));
