@@ -22,19 +22,21 @@ export default function AuthRegister(){
     const navigate = useNavigate()
    
 
-    const handleSubmit = (e : any)=>{  
+    const handleSubmit = (e : Event)=>{  
         e.preventDefault();
         //@ts-ignore
         dispatch(register(formData)).then((data)=> {
             console.log(data)
             if(data?.payload?.success) {
                 toast(data?.payload?.message)
-                navigate("./auth/login")
+                navigate("/auth/login")
             } else {
                 toast(data?.payload?.message)
             }
         })
     }
+ 
+    
     return (
         <div className="mx-auto w-full space-y-6 max-w-md " >
             <div className="text-center">
@@ -43,7 +45,7 @@ export default function AuthRegister(){
                     <Link className="font-medium text-blue-400 hover:underline pl-2" to="./auth/login">Login</Link>
                 </p>
             </div>
-            <CommonForm formData={formData} setFormData={setFormData} onSubmit={handleSubmit} buttonText={"Create a account"} formControl={registerFormControls} />
+            <CommonForm formData={formData} setFormData={setFormData} onSubmit={handleSubmit} buttonText={"Create a account"} formControl={registerFormControls}     />
         </div>
     )
 } 

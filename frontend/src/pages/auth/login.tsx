@@ -1,7 +1,17 @@
+//package imports
 import { Link } from "react-router-dom"
 import { useState } from "react"
-import CommonForm from "@/components/common/form"
+import { useDispatch } from "react-redux"
+
+//file imports
 import { loginFormControl } from "@/config"
+import { login } from "@/store/auth-slice"
+
+
+//shadcn ui imports
+import CommonForm from "@/components/common/form"
+
+
 
 const initialState = {
     userName: '',
@@ -12,9 +22,14 @@ const initialState = {
 
 export default function AuthLogin() {
     const [formData, setFormData] = useState(initialState)
+    const dispatch = useDispatch()
 
-    const handleSubmit = () => {
-
+    const handleSubmit = (e : Event) => {
+        e.preventDefault()
+        //@ts-ignore
+        dispatch(login(formData)).then((data)=>{
+            console.log(data)
+        })
     }
     return (
         <div className="mx-auto w-full space-y-6 max-w-md " >

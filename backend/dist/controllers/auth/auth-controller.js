@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logoutController = exports.loginController = exports.registerController = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 //file import
 const config_1 = require("../../config/config");
-console.log(config_1.jwtKey);
 //db import 
 const user_1 = __importDefault(require("../../model/user"));
 //register
@@ -53,9 +53,29 @@ const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function
     try {
         const userExist = yield user_1.default.findOne({ email });
         if (!userExist) {
-            res.json("user with this email doesnt exist");
+            res.status(400).json("user with this email doesnt exist");
         }
-        // const token = jwt.sign({email} , jwtKey , {expiresIn : "15d"})
+        const verifyPassword = yield bcryptjs_1.default.compare(password, userExist === null || userExist === void 0 ? void 0 : userExist.password);
+        if (!verifyPassword) {
+            res.json("incorrrect password");
+        }
+        if (!config_1.jwtKey) {
+            console.error("JWT_SECRET missing from login controller.");
+            res.status(500).json("Internal server error.");
+        }
+        const token = jsonwebtoken_1.default.sign({ id: userExist === null || userExist === void 0 ? void 0 : userExist._id, email: userExist === null || userExist === void 0 ? void 0 : userExist.email, role: userExist === null || userExist === void 0 ? void 0 : userExist.role }, config_1.jwtKey, { expiresIn: "15d" });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+        }).json({
+            success: true,
+            message: "successfully logged in ",
+            user: {
+                id: userExist === null || userExist === void 0 ? void 0 : userExist._id,
+                email: userExist === null || userExist === void 0 ? void 0 : userExist.email,
+                role: userExist === null || userExist === void 0 ? void 0 : userExist.role
+            }
+        });
     }
     catch (e) {
         console.log("error in login controller", e.message);

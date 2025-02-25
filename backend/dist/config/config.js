@@ -10,4 +10,3 @@ const PORT = process.env.PORT;
 exports.PORT = PORT;
 const jwtKey = process.env.JWT_SECRET;
 exports.jwtKey = jwtKey;
-console.log(jwtKey);

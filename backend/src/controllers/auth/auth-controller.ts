@@ -1,5 +1,5 @@
 //package import 
-import  {Request , Response} from "express";
+import  {NextFunction, Request , Response} from "express";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 
@@ -12,13 +12,13 @@ import User from "../../model/user"
 
 //register
 
-const registerController = async(req :Request , res:Response ) =>{
+const registerController = async(req :Request , res:Response ) :Promise<void> =>{
     const {userName , password , email}  = req.body;
     try{
         const userExist = await User.findOne({email})
 
         if(userExist){
-            res.json("user with this email  already exists")
+             res.json("user with this email  already exists")
         }
 
         const hashedPassword = await bcrypt.hash(password , 10)
@@ -51,17 +51,36 @@ const loginController = async(req :Request , res:Response ) =>{
         const userExist = await User.findOne({email})
 
         if(!userExist){
-            res.json("user with this email doesnt exist")
+            res.status(400).json("user with this email doesnt exist")
         }
             
+        const verifyPassword  = await bcrypt.compare(password , userExist?.password!)
+        
+        
+        if(!verifyPassword){
+            res.json("incorrrect password")
+        }
+        
+        
         if(!jwtKey){
-            console.error("JWT_SECRET is not defined in the environment.");
-            return res.status(500).json("Internal server error: JWT secret missing.");
+            console.error("JWT_SECRET missing from login controller.");
+             res.status(500).json("Internal server error.");
         }
 
-        const token = jwt.sign({email} , jwtKey , {expiresIn : "15d"})
+        const token = jwt.sign({id : userExist?._id , email: userExist?.email , role:userExist?.role } , jwtKey! , {expiresIn : "15d"})
 
-       
+        res.cookie("token" , token , {
+            httpOnly : true,
+            secure : false,
+        }).json({
+            success:true,
+            message : "successfully logged in " , 
+            user:{
+                id: userExist?._id,
+                email : userExist?.email,
+                role: userExist?.role
+            }
+        })
         
         
     }catch(e : any){
@@ -77,11 +96,36 @@ const loginController = async(req :Request , res:Response ) =>{
 //logout 
 
 const logoutController = async(req: Request , res:Response) => {
-
+    res.clearCookie("token").json({
+        success:true,
+        message:"user logged out successfully"
+    })
 }
 
 
 
 //auth middleware 
+
+const protectedRoute = async(req : Request , res: Response , next: NextFunction) =>{
+    
+        const token = req.cookies.token
+
+        if(!token){
+            res.json({
+                message:"unathorized user"
+
+            })
+        }
+
+        try{
+            const decode = jwt.verify(token , jwtKey!  )
+            //@ts-ignore
+            req.user = decode
+        }catch(e:any){
+            console.log("error in auth routes " , e.message)
+            res.json("internal server error")
+        }
+    
+}
 
 export {registerController , loginController , logoutController}

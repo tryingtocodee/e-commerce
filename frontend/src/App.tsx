@@ -1,5 +1,6 @@
 //package imports
 import { Routes, Route } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 //file imports
 import AuthLayout from "./components/auth/layout.tsx"
@@ -20,12 +21,8 @@ import UnAuthPage from "./pages/unauthPage.tsx"
 
 
 export default function App() {
-
-  const isAuthenticated = true;
-  const user = {
-    name:"hello",
-    role:"admin "
-  }
+//ts - fix 
+ const {user , isAuthenticated} = useSelector((state : any)=>state.auth)
   return (
     <div>
       <h1 className="text-3xl font-bold ">Header</h1>

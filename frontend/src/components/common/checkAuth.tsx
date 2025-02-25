@@ -12,7 +12,7 @@ interface CheckAuthProps{
 export default function CheckAuth({isAuthenticated , user , children  } : CheckAuthProps){
 
     const location = useLocation()
-    isAuthenticated = false
+
 
 
     if(!isAuthenticated && !(location.pathname.includes("/login") || location.pathname.includes("/register")) ){
