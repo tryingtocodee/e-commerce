@@ -13,14 +13,14 @@ export default function CheckAuth({isAuthenticated , user , children  } : CheckA
 
     const location = useLocation()
 
-
+console.log(location.pathname , isAuthenticated)
 
     if(!isAuthenticated && !(location.pathname.includes("/login") || location.pathname.includes("/register")) ){
         return <Navigate to="/auth/login"/>
     }
 
     if(isAuthenticated && (location.pathname.includes("/login") || location.pathname.includes("/register"))){
-        if(user?.role == "admin"){
+        if(user?.role === "admin"){
             return <Navigate to="/admin/dashboard"/>
         }else {
            return  <Navigate to="/shopping/home"/>
@@ -31,7 +31,7 @@ export default function CheckAuth({isAuthenticated , user , children  } : CheckA
         return <Navigate to="/unauth-page"/>
     }
 
-    if(isAuthenticated && user?.role == "admin" && location.pathname.includes("shopping")){
+    if(isAuthenticated && user?.role === "admin" && location.pathname.includes("shopping")){
         return <Navigate to="/admin/dashboard"/>
     }
 

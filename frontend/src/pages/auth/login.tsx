@@ -24,11 +24,16 @@ export default function AuthLogin() {
     const [formData, setFormData] = useState(initialState)
     const dispatch = useDispatch()
 
+
     const handleSubmit = (e : Event) => {
         e.preventDefault()
         //@ts-ignore
         dispatch(login(formData)).then((data)=>{
-            console.log(data)
+           if(data?.payload?.success){
+            //add toast msg here 
+           }else{
+            //add toast msg that input is incorrect
+           }
         })
     }
     return (

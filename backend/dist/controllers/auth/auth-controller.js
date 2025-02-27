@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logoutController = exports.loginController = exports.registerController = void 0;
+exports.protectedRoute = exports.logoutController = exports.loginController = exports.registerController = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 //file import
@@ -25,7 +25,7 @@ const registerController = (req, res) => __awaiter(void 0, void 0, void 0, funct
     try {
         const userExist = yield user_1.default.findOne({ email });
         if (userExist) {
-            res.json("user with this email  already exists");
+            return res.json("user with this email  already exists");
         }
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         const newUser = new user_1.default({
@@ -34,7 +34,7 @@ const registerController = (req, res) => __awaiter(void 0, void 0, void 0, funct
             password: hashedPassword
         });
         yield newUser.save();
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "user registerd successfully",
             username: userName,
@@ -43,7 +43,7 @@ const registerController = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
     catch (e) {
         console.log("error in register controller", e.message);
-        res.status(400).json("Internal server error");
+        return res.status(400).json("Internal server error");
     }
 });
 exports.registerController = registerController;
@@ -53,18 +53,18 @@ const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function
     try {
         const userExist = yield user_1.default.findOne({ email });
         if (!userExist) {
-            res.status(400).json("user with this email doesnt exist");
+            return res.status(400).json("user with this email doesnt exist");
         }
         const verifyPassword = yield bcryptjs_1.default.compare(password, userExist === null || userExist === void 0 ? void 0 : userExist.password);
         if (!verifyPassword) {
-            res.json("incorrrect password");
+            return res.json("incorrrect password");
         }
         if (!config_1.jwtKey) {
             console.error("JWT_SECRET missing from login controller.");
-            res.status(500).json("Internal server error.");
+            return res.status(500).json("Internal server error.");
         }
         const token = jsonwebtoken_1.default.sign({ id: userExist === null || userExist === void 0 ? void 0 : userExist._id, email: userExist === null || userExist === void 0 ? void 0 : userExist.email, role: userExist === null || userExist === void 0 ? void 0 : userExist.role }, config_1.jwtKey, { expiresIn: "15d" });
-        res.cookie("token", token, {
+        return res.cookie("token", token, {
             httpOnly: true,
             secure: false,
         }).json({
@@ -79,11 +79,35 @@ const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
     catch (e) {
         console.log("error in login controller", e.message);
-        res.status(400).json("Internal server error");
+        return res.status(400).json("Internal server error");
     }
 });
 exports.loginController = loginController;
 //logout 
 const logoutController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.clearCookie("token").json({
+        success: true,
+        message: "user logged out successfully"
+    });
 });
 exports.logoutController = logoutController;
+//auth middleware 
+const protectedRoute = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.json({
+            message: "unathorized user"
+        });
+    }
+    try {
+        const decode = jsonwebtoken_1.default.verify(token, config_1.jwtKey);
+        //@ts-ignore
+        req.user = decode;
+        next();
+    }
+    catch (e) {
+        console.log("error in auth routes ", e.message);
+        return res.json("internal server error");
+    }
+});
+exports.protectedRoute = protectedRoute;

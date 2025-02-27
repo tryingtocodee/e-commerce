@@ -1,6 +1,6 @@
 //package imports
 import { Routes, Route } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 //file imports
 import AuthLayout from "./components/auth/layout.tsx"
@@ -18,14 +18,28 @@ import ShoppingListingPage from "./pages/shopping-view/listing.tsx"
 import ShoppingAccountPage from "./pages/shopping-view/account.tsx"
 import CheckAuth from "./components/common/checkAuth.tsx"
 import UnAuthPage from "./pages/unauthPage.tsx"
+import { useEffect, useState } from "react"
+import { checkAuth } from "./store/auth-slice/index.ts"
 
 
 export default function App() {
-//ts - fix 
- const {user , isAuthenticated} = useSelector((state : any)=>state.auth)
+  //ts - fix 
+  const { user, isAuthenticated , isLoading } = useSelector((state: any) => state.auth)
+  const [delay , setDelay] = useState(false)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    //@ts-ignore
+    dispatch(checkAuth())
+  }, [dispatch])
+
+ 
+
+  if(isLoading ) return <div>Loading...</div>
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold ">Header</h1>
+    <div  >
       <Routes>
         {/* auth routes */}
         <Route path="/auth" element={<CheckAuth user={user} isAuthenticated={isAuthenticated}>
@@ -45,9 +59,9 @@ export default function App() {
         </Route>
 
         {/*shopping routes */}
-        <Route path="/shopping" element={ <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+        <Route path="/shopping" element={<CheckAuth isAuthenticated={isAuthenticated} user={user}>
           <ShoppingLayout />
-        </CheckAuth> }>
+        </CheckAuth>}>
           <Route path="home" element={<ShoppingHomePage />} />
           <Route path="checkout" element={<ShoppingCheckoutPage />} />
           <Route path="listing" element={<ShoppingListingPage />} />
@@ -56,7 +70,7 @@ export default function App() {
 
         {/*Not found page*/}
         <Route path="*" element={<NotFound />} />
-        <Route path="/unauth-page" element={<UnAuthPage/>} />
+        <Route path="/unauth-page" element={<UnAuthPage />} />
       </Routes>
     </div>
   )
