@@ -1,13 +1,8 @@
 //icons 
-import { LayoutDashboard } from "lucide-react"
-import { ReactNode } from "react"
+import { LayoutDashboard , PackageSearch , ShoppingBasket } from "lucide-react"
 
-type adminSideBar  =  {
-    id:String;
-    label:String;
-    path:String;
-    icon?:ReactNode;
-}
+
+
 
 export const registerFormControls = [
     {
@@ -51,25 +46,24 @@ export const loginFormControl = [
     }]
 
 
-export const adminSideBarMenuItems : adminSideBar[] = [
+export const adminSideBarMenuItems = [
     {
         id : "Dashboard",
         label : "Dashboard",
         path : "/admin/dashboard",
-        icon:  "LayoutDashboard" 
+        icon: LayoutDashboard
     },
     {
         id : "Products",
         label : "Products",
         path : "/admin/products",
-        icon:  "LayoutDashboard" 
-
+        icon:  ShoppingBasket 
     }, 
     {
         id : "Orders",
         label : "Orders",
         path : "/admin/orders",
-        icon:  "LayoutDashboard" 
+        icon:  PackageSearch
 
     }
 ]
