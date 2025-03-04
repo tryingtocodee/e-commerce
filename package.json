@@ -1,0 +1,36 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev": "nodemon backend/server.js",
+    "start" : "node backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tryingtocodee/e-commerce.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/tryingtocodee/e-commerce/issues"
+  },
+  "homepage": "https://github.com/tryingtocodee/e-commerce#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.5.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "ioredis": "^5.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.0",
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
