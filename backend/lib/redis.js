@@ -1,4 +1,8 @@
 import Redis from "ioredis"
+import dotenv from "dotenv"
 
-const client = new Redis(process.env.UPSTASH_REDIS_URL);
-await client.set('foo', 'bar');
+dotenv.config()
+
+const redis = new Redis(process.env.UPSTASH_REDIS_URL);
+
+export {redis}
