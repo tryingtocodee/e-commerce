@@ -173,4 +173,8 @@ const refreshToken = async(req , res) =>{
     }
 }
 
-export {signUpController , loginController , logoutController , refreshToken}
+const getProfile = async(req , res) =>{
+    
+}
+
+export {signUpController , loginController , logoutController , refreshToken , getProfile}
