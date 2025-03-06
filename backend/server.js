@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js"
 import productRoutes from "./routes/productRoutes.js"
 import cartRoutes from "./routes/cartRoutes.js"
 import couponRoutes from "./routes/couponRoutes.js"
+import paymentRoutes from "./routes/paymentRoute.js"
 
 import { connectDb } from "./lib/db.js"
 
@@ -25,6 +26,8 @@ app.use("/api/auth" , authRoutes)
 app.use("/api/products" , productRoutes)
 app.use("/api/cart" , cartRoutes)
 app.use("/api/coupons" , couponRoutes)
+app.use("/api/payments" , paymentRoutes)
+
 
 
 
