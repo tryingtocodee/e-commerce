@@ -5,6 +5,10 @@ import cookieParser from "cookie-parser"
 
 // file imports
 import authRoutes from "./routes/authRoutes.js"
+import productRoutes from "./routes/productRoutes.js"
+import cartRoutes from "./routes/cartRoutes.js"
+import couponRoutes from "./routes/couponRoutes.js"
+
 import { connectDb } from "./lib/db.js"
 
 
@@ -18,7 +22,10 @@ app.use(cookieParser())
 
 //routes
 app.use("/api/auth" , authRoutes)
-app.use("/api/products" , protectedRoutes)
+app.use("/api/products" , productRoutes)
+app.use("/api/cart" , cartRoutes)
+app.use("/api/coupons" , couponRoutes)
+
 
 
 app.listen(port , ()=>{
