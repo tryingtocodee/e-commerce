@@ -1,4 +1,4 @@
-import User from "../model/userModel"
+import User from "../model/userModel.js"
 
 const protectedRoutes  = async(req , res , next) =>{
     try {

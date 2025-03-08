@@ -174,7 +174,15 @@ const refreshToken = async(req , res) =>{
 }
 
 const getProfile = async(req , res) =>{
-    
+    try{
+        res.json(req.ser)
+    }catch(e){
+        console.log("error in getProfile")
+        res.json({
+            success : false,
+            message : "Internal Server error"
+        })
+    }
 }
 
 export {signUpController , loginController , logoutController , refreshToken , getProfile}

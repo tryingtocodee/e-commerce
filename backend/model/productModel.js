@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
     },
     category:{
         type:String,
-        required:ture
+        required:true
     },
     isFeatured:{
         type:Boolean,

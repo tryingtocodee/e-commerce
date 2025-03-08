@@ -1,6 +1,6 @@
 //file imports
 import Products from "../model/productModel.js"
-import redis from "../lib/redis.js"
+import {redis} from "../lib/redis.js"
 import cloudinary from "../lib/cloudinary.js"
 
 
