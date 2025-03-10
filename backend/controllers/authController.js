@@ -84,39 +84,36 @@ const signUpController = async(req , res) => {
 
 
 
-const loginController = async(req , res) => {
+ const loginController = async (req, res) => {
+	try {
+		const { email, password } = req.body;
+		const user = await User.findOne({ email });
+
+        try{
+            if (user && (await user.comparePassword(password))) {
+                const { accessToken, refreshToken } = generateToken(user._id);
+                await storeRefreshToken(user._id, refreshToken);
+                setCookie(res, accessToken, refreshToken);
     
-    try{
-        const {email , password} = req.body;
-        
-        const user = await user.findOne({email})
-
-        if(user && (await user.comparePassword(password))){
-            const {accessToken , refreshToken } = generateToken(user._id)
-
-            await storeRefreshToken(user._id , refreshToken)
-
-            setCookie(res , accessToken , refreshToken)
-
-            res.json({
-                success:true,
-                message:"user logged in successfully",
-                user:{
-                    id : user._id,
-                    name:user.name,
-                    email : user.email,
-                    role:user.role
-                }
-            })
-        }else{
-            res.status(401).json("invalid email or password")
+                res.json({
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                });
+            } else {
+                res.status(400).json({ message: "Invalid password" });
+    
+            }
+        }catch(e){
+            console.log(e.message)
         }
-    }catch(error){
-        console.log("error in login controller " , error.messagse)
-        return res.status(500).json("Internal server error")
-    }
-   
-}
+		
+	} catch (error) {
+		console.log("Error in login controller", error.message);
+		res.status(500).json({ message: error.message });
+	}
+};
 
 
 
@@ -175,7 +172,7 @@ const refreshToken = async(req , res) =>{
 
 const getProfile = async(req , res) =>{
     try{
-        res.json(req.ser)
+        res.json(req.user)
     }catch(e){
         console.log("error in getProfile")
         res.json({

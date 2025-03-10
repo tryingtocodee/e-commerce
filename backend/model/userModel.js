@@ -37,29 +37,22 @@ const userSchema = new mongoose.Schema({
 
 
 
-//pre save hook to hash password before saving to db
-userSchema.pre("save" , async function(next){
-    if(!this.isModified("password")) return next();
-    
-    try{
-        const salt = await bcrypt.genSalt(10)
-        this.password = await bcrypt.hash(this.password , salt)
-        next()
-    }catch(error){
-        next(error)
-        console.log("error hashing the password . check user model schema file")
-    }
-})
+// Pre-save hook to hash password before saving to database
+userSchema.pre("save", async function (next) {
+	if (!this.isModified("password")) return next();
 
+	try {
+		const salt = await bcrypt.genSalt(10);
+		this.password = await bcrypt.hash(this.password, salt);
+		next();
+	} catch (error) {
+		next(error);
+	}
+});
 
-//compare password
-userSchema.methods.comparePassword = async function(password){
-    try{
-        return bcrypt.compare(password , this.password)
-    }catch(error){
-        console.log("error comparing the password . check user model schema file")
-    }
-}
+userSchema.methods.comparePassword = async function (password) {
+	return bcrypt.compare(password, this.password);
+};
 
 const User = mongoose.model("User" , userSchema)
 

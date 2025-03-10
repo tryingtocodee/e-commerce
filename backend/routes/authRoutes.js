@@ -11,7 +11,7 @@ router.post("/signup" , signUpController)
 router.post("/login" , loginController)
 router.post("/logout" , logoutController)
 router.post("/refresh-token" , refreshToken)
-router.post("/profile" , protectedRoutes , getProfile)
+router.get("/profile" , protectedRoutes , getProfile)
 
 
 
