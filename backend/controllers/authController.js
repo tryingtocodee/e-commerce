@@ -10,7 +10,7 @@ import User from "../model/userModel.js"
 
 //generating token from cookie and redis 
 export const generateToken = (userId) =>{
-    const accessToken = jwt.sign({userId} , process.env.ACCESS_TOKEN , {expiresIn:"15m"})
+    const accessToken = jwt.sign({userId} , process.env.ACCESS_TOKEN , {expiresIn:"100m"})
 
     const refreshToken = jwt.sign({userId} , process.env.REFRESH_ACCESS_TOKEN , {expiresIn:"7d"})
 
@@ -23,14 +23,14 @@ const storeRefreshToken = async(userId,refreshToken) =>{
 }
 
 const setCookie = (res , accessToken , refreshToken) =>{
-    res.cookie("access-token" , accessToken , {
+    res.cookie("accessToken" , accessToken , {
         httpOnly:true, //prevent XSS attacks / prevents access of cookies through js 
         secure:process.env.NODE_ENV === "production",
         sameSite:"strict", //prevents CSRF attack cross site request forgery attack
         maxAge: 15 * 60 * 1000 
     })
 
-    res.cookie("refresh-token" , refreshToken , {
+    res.cookie("refreshToken" , refreshToken , {
         httpOnly:true, //prevent XSS attacks / prevents access of cookies through js 
         secure:process.env.NODE_ENV === "production",
         sameSite:"strict", //prevents CSRF attack cross site request forgery attack

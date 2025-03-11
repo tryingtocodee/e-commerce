@@ -19,9 +19,9 @@ import { connectDb } from "./lib/db.js"
 
 dotenv.config()
 const app = express()
-app.use(express.json())
-const port = process.env.PORT
 app.use(cookieParser())
+app.use(express.json({limit : "10mb"}))
+const port = process.env.PORT
 
 //routes
 app.use("/api/auth" , authRoutes)

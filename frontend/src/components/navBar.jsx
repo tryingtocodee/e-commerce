@@ -1,10 +1,11 @@
 import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
+import useUserStore from "../store/useUserStore";
 
 export default function NavBar() {
 
     // eslint-disable-next-line no-unused-vars
-    const user = false;
+    const {user , logout} = useUserStore();
     const isAdmin = true;
 
     return (
@@ -55,7 +56,7 @@ export default function NavBar() {
 								//onClick={}
 							>
 								<LogOut size={18} />
-								<span className='hidden sm:inline ml-2'>Log Out</span>
+								<span className='hidden sm:inline ml-2' onClick={logout}>Log Out</span>
 							</button>
 						) : (
 							<>

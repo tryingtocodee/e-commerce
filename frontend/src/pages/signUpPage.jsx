@@ -15,9 +15,8 @@ const SignUpPage = () => {
 
 
 
-	const { signup  } = useUserStore();
+	const { signup  , loading } = useUserStore();
 
-const loading = false
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		signup(formData);

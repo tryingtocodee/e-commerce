@@ -7,10 +7,7 @@ import cloudinary from "../lib/cloudinary.js"
 const getAllProductsContoller = async(req , res) =>{
     try{
         const products = await Products.find()
-        res.status(200).json({
-            success : true ,
-            message : "Got all the products"
-        })
+        res.status(200).json({products})
     }catch(e){
         console.log("error in getAllProductsContoller" , e.message)
         res.status(400).json({
@@ -63,7 +60,7 @@ const createProductsController = async(req , res ) =>{
         let cloudinaryResponse = null
 
         if(image){
-            cloudinaryResponse = cloudinary.uploader.upload(image , {folder:"products"})
+            cloudinaryResponse = await  cloudinary.uploader.upload(image , {folder:"products"})
         }
 
         const product = await Products.create({

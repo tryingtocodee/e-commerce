@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 //file imports
 import HomePage from "./pages/homePage";
@@ -8,10 +8,12 @@ import NavBar from "./components/navBar";
 import { Toaster } from "react-hot-toast";
 import useUserStore from "./store/useUserStore";
 import { useEffect } from "react";
+import AdminPage from "./pages/adminPage";
 
 
 export default function App() {
   const {user , checkAuth} = useUserStore()
+  const isAdmin = true;
 
   useEffect(()=>{
     checkAuth()
@@ -30,8 +32,9 @@ export default function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={user ? <HomePage /> : <LoginPage />} />
+          <Route path="/signup" element={user ? <Navigate to="/" /> : <SignUpPage />} />
+          <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
+          <Route path="/secret-dashboard" element={isAdmin ? < AdminPage /> : <Navigate to="/login"/> } />
         </Routes>
       </div>
       <Toaster />

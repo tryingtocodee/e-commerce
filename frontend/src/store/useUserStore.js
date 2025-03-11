@@ -8,7 +8,7 @@ import {toast} from "react-hot-toast"
 const useUserStore = create((set ) =>({
     user : null,
     loading  : false,
-    checkAuth : true,
+    checkingAuth : true,
 
     signup : async ({name , email , password , confirmPassword}) => {
         set({loading : true})
@@ -47,13 +47,23 @@ const useUserStore = create((set ) =>({
     checkAuth: async () => {
 		set({ checkingAuth: true });
 		try {
-			const response = await axios.get("/auth/profile");
-			set({ user: response.data, checkingAuth: false });
+			const response = await axios.get("/auth/profile") ;
+			set({ user: response, checkingAuth: false });
 		} catch (error) {
 			console.log(error.message);
 			set({ checkingAuth: false, user: null });
 		}
 	},
+
+    logout : async () =>{
+        try {
+            await axios.post("/auth/logout")
+            set({user : null})
+        } catch (e) {
+            console.log("error in logout zustand" , e.message)
+            toast.error("error occured")
+        }
+    }
    
 }))
 
