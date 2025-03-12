@@ -9,15 +9,24 @@ import { Toaster } from "react-hot-toast";
 import useUserStore from "./store/useUserStore";
 import { useEffect } from "react";
 import AdminPage from "./pages/adminPage";
+import CategoryPage from "./pages/categoryPage";
+import CartPage from "./pages/cartPage";
+import { useCartStore } from "./store/useCartStore";
 
 
 export default function App() {
-  const {user , checkAuth} = useUserStore()
+  const {user , checkAuth } = useUserStore()
   const isAdmin = true;
+  const {getCartItems} = useCartStore()
 
   useEffect(()=>{
     checkAuth()
+ 
   } , [checkAuth])
+
+  useEffect(()=>{
+    getCartItems()
+  },[getCartItems])
 
   return (
     <div className='min-h-screen bg-gray-900 text-white relative overflow-hidden'>
@@ -35,6 +44,9 @@ export default function App() {
           <Route path="/signup" element={user ? <Navigate to="/" /> : <SignUpPage />} />
           <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
           <Route path="/secret-dashboard" element={isAdmin ? < AdminPage /> : <Navigate to="/login"/> } />
+          <Route path="/category/:category" element={<CategoryPage/> } />
+          <Route path="/cart" element={user ? < CartPage /> : <Navigate to="/login"/> } />
+
         </Routes>
       </div>
       <Toaster />

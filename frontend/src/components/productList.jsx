@@ -5,13 +5,13 @@ import  useProductStore  from "../store/useProductStore.js";
 import { useEffect } from "react";
 
 const ProductsList = () => {
-	const { deleteProduct, toggleFeaturedProduct, products , fetchAllProducts  } = useProductStore();
+	const { deleteProducts, toggleFeatureProducts, products , fetchAllProducts  } = useProductStore();
 
 	   useEffect(()=>{
 			fetchAllProducts()
 		},[fetchAllProducts])
 
-	console.log("products", products);
+
 
 	return (
 		<motion.div
@@ -82,7 +82,7 @@ const ProductsList = () => {
 							</td>
 							<td className='px-6 py-4 whitespace-nowrap'>
 								<button
-									onClick={() => toggleFeaturedProduct(product._id)}
+									onClick={() => toggleFeatureProducts(product._id)}
 									className={`p-1 rounded-full ${
 										product.isFeatured ? "bg-yellow-400 text-gray-900" : "bg-gray-600 text-gray-300"
 									} hover:bg-yellow-500 transition-colors duration-200`}
@@ -92,7 +92,7 @@ const ProductsList = () => {
 							</td>
 							<td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
 								<button
-									onClick={() => deleteProduct(product._id)}
+									onClick={() => deleteProducts(product._id)}
 									className='text-red-400 hover:text-red-300'
 								>
 									<Trash className='h-5 w-5' />

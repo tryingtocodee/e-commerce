@@ -11,7 +11,7 @@ router.get("/features" ,   getFeaturedProductsContoller)
 router.get("/category/:category" ,   getProductsByCategoryController)
 router.get("/features" ,   getProductRecommendationController)
 router.post("/" , protectedRoutes , adminRoute,  createProductsController)
-router.put("/:id" , protectedRoutes , adminRoute,  toggleFeatureProductsController)
+router.patch("/:id" , protectedRoutes , adminRoute,  toggleFeatureProductsController)
 router.delete("/:id" , protectedRoutes , adminRoute , deleteProductsController)
 
 

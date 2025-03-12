@@ -95,7 +95,7 @@ const deleteProductsController = async(req , res) =>{
         }
 
         if(products.image){
-            const publicId = await products.split("/").pop().split(".")[0]
+            const publicId = await products.image.split("/").pop().split(".")[0]
 
             try {
                 await cloudinary.uploader.destroy(`products/${publicId}`)
@@ -162,41 +162,38 @@ const getProductsByCategoryController = async (req , res ) =>{
 
         const products = await Products.find({category})
 
-        res.json(products)
+        res.json({products})
     } catch (e) {
         console.log("error in getProductsByCategoryController" ,e.message)
         return  res.json("Internal server error ")
     }
 }
 
-const toggleFeatureProductsController = async (req , res) =>{
-    try {
-        const product = await Products.findById(req.params.id)
+ const toggleFeatureProductsController = async (req, res) => {
+	try {
+		const product = await Products.findById(req.params.id);
+		if (product) {
+			product.isFeatured = !product.isFeatured;
+			const updatedProduct = await product.save();
+			await updateFeaturedProductsCache();
+			res.json(updatedProduct);
+		} else {
+			res.status(404).json({ message: "Product not found" });
+		}
+	} catch (error) {
+		console.log("Error in toggleFeaturedProduct controller", error.message);
+		res.status(500).json({ message: "Server error", error: error.message });
+	}
+};
 
-        if(product){
-            product.isFeatured = !product.isFeatured
-            const updatedProducts = await product.save()
-            await updateFeaturedProductsCache()
-            res.json(updatedProducts)
-        }else {
-            return  res.json("product not found ")
-        }
-    } catch (e) {
-        console.log("error in toggleFeatureProductsController" , e.messasge)
-        return  res.json("Internal server error ")
-    }
+async function updateFeaturedProductsCache() {
+	try {
+		// The lean() method  is used to return plain JavaScript objects instead of full Mongoose documents. This can significantly improve performance
+
+		const featuredProducts = await Products.find({ isFeatured: true }).lean();
+		await redis.set("featured_products", JSON.stringify(featuredProducts));
+	} catch (error) {
+		console.log("error in update cache function");
+	}
 }
-
-async function updateFeaturedProductsCache(){
-    try {
-        const featuredProducts = await Products.find({isFeatured:true}).lean()
-
-        await redis.set("feature_products" , JSON.stringify(featuredProducts))
-
-    } catch (e) {
-        console.log("error in updateFeaturedProductsCache" , e.message)
-        return res.json("Internal server error ")
-    }
-}
-
 export {getAllProductsContoller , getFeaturedProductsContoller , createProductsController , deleteProductsController , getProductRecommendationController , getProductsByCategoryController , toggleFeatureProductsController}

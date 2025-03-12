@@ -10,7 +10,7 @@ import User from "../model/userModel.js"
 
 //generating token from cookie and redis 
 export const generateToken = (userId) =>{
-    const accessToken = jwt.sign({userId} , process.env.ACCESS_TOKEN , {expiresIn:"100m"})
+    const accessToken = jwt.sign({userId} , process.env.ACCESS_TOKEN , {expiresIn:"15d"})
 
     const refreshToken = jwt.sign({userId} , process.env.REFRESH_ACCESS_TOKEN , {expiresIn:"7d"})
 

@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post("/", protectedRoutes , addToCartController)
 router.get("/", protectedRoutes ,getCartProductsController)
-router.post("/", protectedRoutes , removeAllFromCartController)
+router.delete("/", protectedRoutes , removeAllFromCartController)
 router.put("/:id", protectedRoutes , updateQuantityController)
 
 

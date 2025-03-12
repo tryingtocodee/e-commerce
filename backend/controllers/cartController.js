@@ -6,7 +6,7 @@ const addToCartController = async (req , res) =>{
 
         const user = req.user
 
-        const existingItem = await user.cartItem.find(item => item.id === productId)
+        const existingItem = await user.cartItem.find((item) => item.id === productId)
 
         if(existingItem){
             existingItem.quantity +=1
@@ -16,11 +16,7 @@ const addToCartController = async (req , res) =>{
 
         await user.save()
 
-        return res.json({
-            success : true,
-            message : "Cart items",
-            cartItem : user.cartItem
-        })
+        return res.json(user.cartItem)
 
     } catch (e) {
         console.log("error in addToCartController " , e.message)
@@ -43,10 +39,7 @@ const getCartProductsController = async (req , res) =>{
             return {...product.toJSON() , quantity : items.quantity}
         })
 
-        return res.json({
-            success : true,
-            cartItem : cartItem
-        })
+        return res.json(cartItem)
 
 
     } catch (e) {
@@ -68,7 +61,7 @@ const removeAllFromCartController = async (req , res) =>{
         if(!productId){
             user.cartItem = []
         }else {
-            user.cartItem = user.cartItem.filter((item) => item.id !== productId)
+            user.cartItem = await user.cartItem.filter((item) => item.id !== productId)
         }
 
         await user.save()
@@ -97,7 +90,7 @@ const updateQuantityController = async (req , res) =>{
         const {quantity} = req.body
 
         const user = req.user
-        const existingItem = await user.find((item)=>item.id === productId)
+        const existingItem = await user.cartItem.find((item)=>item.id === productId)
 
         if(existingItem){
             if(quantity === 0){
@@ -113,7 +106,7 @@ const updateQuantityController = async (req , res) =>{
 
 
     } catch (e) {
-        console.log("error in addToCartController " , e.message)
+        console.log("error in updateQuantityController " , e.message)
         return res.status(500).json({
             success : false,
             message:"Internal server error"
